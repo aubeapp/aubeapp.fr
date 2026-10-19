@@ -1,0 +1,671 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Aube, un verset chaque matin</title>
+<meta name="description" content="Aube vous apporte un verset de la Bible chaque matin à 6 h 00. Gratuite, sans compte, sans collecte de données.">
+<meta name="theme-color" content="#14132B">
+<link rel="icon" href="assets/icon-180.png">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
+<link rel="preload" href="assets/fonts/CormorantGaramond.ttf" as="font" type="font/ttf" crossorigin>
+<style>
+@font-face {
+  font-family: "Cormorant Garamond";
+  src: url("assets/fonts/CormorantGaramond.ttf") format("truetype");
+  font-weight: 300 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Karla";
+  src: url("assets/fonts/Karla.ttf") format("truetype");
+  font-weight: 200 800;
+  font-display: swap;
+}
+
+:root {
+  --paper: #FBF6EE;
+  --peach: #F3D9C8;
+  --dawn-rose: #E9B7A1;
+  --earth: #9A4A30;
+  --ink: #2B2420;
+  --ink-soft: #6E5A50;
+  --line: #D9C6B4;
+  --night: #14132B;
+
+  --serif: "Cormorant Garamond", "Iowan Old Style", Georgia, serif;
+  --sans: "Karla", ui-rounded, system-ui, sans-serif;
+  --calm: cubic-bezier(.22, .61, .2, 1);
+
+  /* État par défaut : plein jour (sans JavaScript, la page reste lisible). */
+  --fg: var(--ink);
+  --fg-soft: var(--ink-soft);
+  --o-night: 0;
+  --o-rose: 0;
+  --sun-y: 0;
+  --hill-1: #F0CDB9;
+  --hill-2: #F6E2D4;
+  --hill-3: var(--paper);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 1.125rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+img { display: block; max-width: 100%; }
+h1, h2, h3, p, blockquote, figure { margin: 0; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--earth); outline-offset: 4px; border-radius: 4px; }
+
+/* ───────── Le lever du jour ───────── */
+
+.dawn { height: 340vh; position: relative; }
+.stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  color: var(--fg);
+  background: linear-gradient(var(--peach), var(--paper) 62%);
+}
+.sky { position: absolute; inset: 0; pointer-events: none; }
+.sky-rose {
+  background: linear-gradient(#3B3462 0%, #8A5A80 34%, #D98C7E 58%, #F4B98F 72%, #F9D9B4 84%);
+  opacity: var(--o-rose);
+}
+.sky-night {
+  background: linear-gradient(#0F0E24 0%, #1B1A38 45%, #332A4E 72%, #4B3557 88%);
+  opacity: var(--o-night);
+}
+.stars { position: absolute; inset: 0 0 30% 0; opacity: var(--o-night); pointer-events: none; }
+.stars i {
+  position: absolute;
+  width: 2px; height: 2px;
+  border-radius: 50%;
+  background: #FFF6E6;
+  animation: twinkle 5s ease-in-out infinite;
+}
+@keyframes twinkle { 0%, 100% { opacity: .25; } 50% { opacity: .95; } }
+
+.horizon { position: absolute; left: 0; right: 0; top: 74%; height: 0; }
+.sun {
+  position: absolute;
+  left: 50%;
+  width: 30vmin; height: 30vmin;
+  margin: -15vmin 0 0 -15vmin;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 42%, #FFF3D6 0%, #FFD9A3 46%, #F5AE7C 100%);
+  box-shadow:
+    0 0 6vmin 1vmin rgba(255, 221, 170, .75),
+    0 0 22vmin 8vmin rgba(248, 176, 128, .45),
+    0 0 60vmin 26vmin rgba(240, 150, 120, .22);
+  transform: translate3d(0, calc(var(--sun-y) * 1vmin), 0);
+  will-change: transform;
+}
+.hills {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  width: 100%; height: 34%;
+  display: block;
+}
+.hills .h1 { fill: var(--hill-1); }
+.hills .h2 { fill: var(--hill-2); }
+.hills .h3 { fill: var(--hill-3); }
+
+.topbar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem clamp(1.25rem, 4vw, 3rem);
+  z-index: 3;
+}
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 1;
+  text-decoration: none;
+}
+.brand svg { width: 1.6rem; height: 1.6rem; }
+.topbar .quiet {
+  font-size: .95rem;
+  text-decoration: none;
+  color: var(--fg-soft);
+}
+.topbar .quiet:hover { color: var(--fg); }
+
+.mark { fill: none; stroke: currentColor; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+
+.scene {
+  position: absolute;
+  left: 0; right: 0;
+  top: 0; height: 66%;
+  display: grid;
+  place-items: center;
+  padding: 5rem clamp(1.25rem, 6vw, 4rem) 0;
+  text-align: center;
+  z-index: 2;
+}
+.scene > * { grid-area: 1 / 1; }
+
+.title { opacity: var(--o-title, 1); transform: translate3d(0, calc((1 - var(--o-title, 1)) * -24px), 0); }
+.title .big-mark {
+  width: clamp(3.5rem, 9vmin, 5.5rem);
+  height: auto;
+  margin: 0 auto .75rem;
+  display: block;
+  color: var(--dawn-rose);
+}
+.title .big-mark path { stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw 2.2s var(--calm) .3s forwards; }
+.title .big-mark path:nth-child(2) { animation-delay: 1.2s; animation-duration: 1.6s; }
+.title .big-mark path:nth-child(n+3) { animation-delay: 2.2s; animation-duration: .7s; }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+.title h1 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(5rem, 19vmin, 12rem);
+  line-height: .95;
+  letter-spacing: -.02em;
+  animation: rise 2.4s var(--calm) .5s both;
+}
+.title p {
+  margin-top: 1rem;
+  font-size: clamp(1.05rem, 2.4vmin, 1.35rem);
+  color: var(--fg-soft);
+  animation: rise 2.4s var(--calm) 1.3s both;
+}
+@keyframes rise { from { opacity: 0; transform: translateY(18px); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
+
+.verse { max-width: 21ch; font-size: clamp(2.2rem, 7.4vmin, 5rem); }
+.verse blockquote {
+  font-family: var(--serif);
+  font-weight: 500;
+  line-height: 1.12;
+  letter-spacing: -.01em;
+  text-wrap: balance;
+}
+.verse .w { display: inline-block; will-change: opacity, transform; }
+.verse figcaption {
+  margin-top: 1.4rem;
+  font-family: var(--sans);
+  font-size: .875rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--fg-soft);
+  opacity: var(--o-ref, 1);
+}
+
+.hint {
+  position: absolute;
+  left: 0; right: 0; bottom: 2.25rem;
+  z-index: 3;
+  text-align: center;
+  font-size: .95rem;
+  color: var(--fg-soft);
+  opacity: var(--o-hint, 0);
+  pointer-events: none;
+}
+.hint::after {
+  content: "";
+  display: block;
+  width: 1px; height: 2.5rem;
+  margin: .75rem auto 0;
+  background: currentColor;
+  transform-origin: top;
+  animation: drip 2.8s var(--calm) infinite;
+}
+@keyframes drip { 0% { transform: scaleY(0); opacity: 0; } 40% { transform: scaleY(1); opacity: 1; } 100% { transform: scaleY(1); opacity: 0; } }
+
+/* ───────── Le jour ───────── */
+
+.wrap { width: min(100% - 2.5rem, 68rem); margin-inline: auto; }
+.day section { padding-block: clamp(5rem, 14vh, 10rem); }
+.day h2 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(2.4rem, 5.4vw, 4.25rem);
+  line-height: 1.04;
+  letter-spacing: -.015em;
+  text-wrap: balance;
+}
+.day p.lede { margin-top: 1.5rem; max-width: 34rem; color: var(--ink-soft); font-size: 1.2rem; }
+
+.reveal { opacity: 0; transform: translateY(22px); transition: opacity 1.4s var(--calm), transform 1.4s var(--calm); }
+.reveal.in { opacity: 1; transform: none; }
+
+/* Le matin */
+.morning .wrap { display: grid; gap: 3rem clamp(2rem, 7vw, 6rem); align-items: center; }
+@media (min-width: 52rem) { .morning .wrap { grid-template-columns: 1fr auto; } }
+.clock {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(4.5rem, 12vw, 9rem);
+  line-height: 1;
+  color: var(--earth);
+  font-variant-numeric: lining-nums tabular-nums;
+  margin-bottom: 1.5rem;
+}
+.phone {
+  width: min(19rem, 74vw);
+  margin-inline: auto;
+  padding: .6rem;
+  border-radius: 3.1rem;
+  background: var(--ink);
+  box-shadow: 0 2.5rem 5rem -1.5rem rgba(154, 74, 48, .38), 0 .5rem 1.25rem rgba(43, 36, 32, .12);
+  will-change: transform;
+}
+.phone img { border-radius: 2.5rem; width: 100%; height: auto; }
+
+/* L'année */
+.year { text-align: center; }
+.year h2, .year p.lede { margin-inline: auto; }
+.rotor { position: relative; min-height: 13rem; margin: 3.5rem auto 0; max-width: 46rem; display: grid; place-items: center; }
+.rotor figure { grid-area: 1 / 1; opacity: 0; transition: opacity 2s var(--calm), transform 2s var(--calm); transform: translateY(10px); }
+.rotor figure.on { opacity: 1; transform: none; }
+.rotor blockquote { font-family: var(--serif); font-weight: 500; font-size: clamp(1.6rem, 3.6vw, 2.5rem); line-height: 1.2; text-wrap: balance; }
+.rotor figcaption { margin-top: 1rem; font-size: .875rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
+.dots {
+  margin: 3.5rem auto 0;
+  max-width: 44rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .5rem;
+  list-style: none;
+  padding: 0;
+}
+.dots li {
+  width: .5rem; height: .5rem;
+  border-radius: 50%;
+  background: var(--line);
+  opacity: 0;
+  transform: scale(.2);
+  transition: opacity .9s var(--calm), transform .9s var(--calm), background-color .9s;
+  transition-delay: calc(var(--i) * 5ms);
+}
+.dots.in li { opacity: 1; transform: none; }
+.dots li.past { background: var(--dawn-rose); }
+.dots li.today { background: var(--earth); box-shadow: 0 0 0 .3rem rgba(154, 74, 48, .16); }
+.dots-note { margin-top: 1.5rem; color: var(--ink-soft); font-size: 1rem; }
+.dots-note b { color: var(--earth); font-weight: 600; }
+
+/* Garder et partager */
+.keep .wrap { display: grid; gap: 3.5rem clamp(2rem, 7vw, 6rem); align-items: center; }
+@media (min-width: 52rem) { .keep .wrap { grid-template-columns: auto 1fr; } .keep .cards { order: -1; } }
+.cards { position: relative; width: min(24rem, 86vw); height: 27rem; margin-inline: auto; }
+.share-card {
+  position: absolute;
+  right: 0; top: 0;
+  width: 72%;
+  aspect-ratio: 1080 / 1350;
+  padding: 8% 8% 7%;
+  border-radius: 1.1rem;
+  background: linear-gradient(var(--peach), var(--paper) 55%);
+  box-shadow: 0 2rem 4rem -1.5rem rgba(154, 74, 48, .4), 0 .25rem .75rem rgba(43, 36, 32, .08);
+  display: flex;
+  flex-direction: column;
+  transform: rotate(3deg);
+  will-change: transform;
+}
+.share-card svg { width: 2rem; height: 2rem; color: var(--earth); margin-top: auto; }
+.share-card blockquote { font-family: var(--serif); font-weight: 500; font-size: 1.45rem; line-height: 1.18; margin-top: .75rem; }
+.share-card .ref { margin-top: .75rem; font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
+.share-card .name { margin-top: auto; font-family: var(--serif); font-weight: 600; font-size: 1.2rem; }
+.fav-list {
+  position: absolute;
+  left: 0; bottom: 0;
+  width: 66%;
+  padding: 1rem 1.1rem .4rem;
+  border-radius: 1.1rem;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  box-shadow: 0 1.5rem 3rem -1.25rem rgba(43, 36, 32, .28);
+  transform: rotate(-4deg);
+  will-change: transform;
+}
+.fav-list h3 { font-family: var(--serif); font-weight: 600; font-size: 1.15rem; text-align: center; padding-bottom: .7rem; border-bottom: 1px solid var(--line); }
+.fav-list div { padding: .7rem 0; border-bottom: 1px solid var(--line); }
+.fav-list div:last-child { border-bottom: 0; }
+.fav-list q { display: block; quotes: none; font-family: var(--serif); font-weight: 500; font-size: 1.02rem; line-height: 1.2; }
+.fav-list span { display: block; margin-top: .2rem; font-size: .75rem; font-weight: 600; color: var(--earth); }
+
+/* Rien d'autre */
+.plain h2 { max-width: 14ch; }
+.plain dl { margin: 3.5rem 0 0; display: grid; gap: 0; border-top: 1px solid var(--line); }
+.plain dl > div { display: grid; gap: .25rem 2rem; padding: 1.6rem 0; border-bottom: 1px solid var(--line); }
+@media (min-width: 44rem) { .plain dl > div { grid-template-columns: 20rem 1fr; align-items: baseline; } }
+.plain dt { font-family: var(--serif); font-weight: 500; font-size: clamp(1.6rem, 3vw, 2.1rem); line-height: 1.15; }
+.plain dd { margin: 0; color: var(--ink-soft); max-width: 34rem; }
+
+/* À demain */
+.tomorrow { text-align: center; background: linear-gradient(var(--paper), var(--peach)); }
+.day section.tomorrow { padding-bottom: 3rem; }
+.halo { position: relative; width: 9rem; height: 9rem; margin: 0 auto 2rem; display: grid; place-items: center; }
+.halo::before {
+  content: "";
+  position: absolute; inset: -40%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(233, 183, 161, .75), rgba(233, 183, 161, 0) 68%);
+  animation: breathe 7s ease-in-out infinite;
+}
+@keyframes breathe { 0%, 100% { transform: scale(.82); opacity: .55; } 50% { transform: scale(1.08); opacity: 1; } }
+.halo svg { position: relative; width: 6rem; height: 6rem; color: var(--earth); }
+.halo svg path { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 2.4s var(--calm); }
+.halo.in svg path { stroke-dashoffset: 0; }
+.halo svg path:nth-child(2) { transition-delay: .9s; }
+.halo svg path:nth-child(n+3) { transition-delay: 1.9s; transition-duration: .8s; }
+.tomorrow h2 { font-size: clamp(3.2rem, 9vw, 7rem); }
+.tomorrow p.lede { margin-inline: auto; }
+.soon {
+  display: inline-block;
+  margin-top: 2.5rem;
+  padding: .95rem 1.75rem;
+  border-radius: 1rem;
+  background: var(--ink);
+  color: var(--paper);
+  font-weight: 600;
+}
+footer {
+  margin-top: clamp(4rem, 10vh, 7rem);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .5rem 2rem;
+  font-size: .95rem;
+  color: var(--ink-soft);
+}
+footer a { text-underline-offset: .2em; }
+footer a:hover { color: var(--earth); }
+
+/* ───────── Mouvement réduit ───────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .dawn { height: auto; }
+  .stage { position: relative; height: auto; min-height: 100svh; }
+  .scene { position: relative; height: auto; padding-bottom: 42vh; display: block; }
+  .scene .verse { margin: 4rem auto 0; }
+  .title .big-mark path, .halo svg path { stroke-dashoffset: 0; }
+  .reveal, .dots li { opacity: 1; transform: none; }
+  .hint { display: none; }
+}
+</style>
+</head>
+<body>
+
+<header class="dawn" id="dawn">
+  <div class="stage" id="stage">
+    <div class="sky sky-rose"></div>
+    <div class="sky sky-night"></div>
+    <div class="stars" id="stars" aria-hidden="true"></div>
+
+    <div class="horizon" aria-hidden="true"><div class="sun"></div></div>
+    <svg class="hills" viewBox="0 0 1440 340" preserveAspectRatio="none" aria-hidden="true">
+      <path class="h1" d="M0 120 C 180 60 330 70 520 104 S 860 150 1040 96 S 1320 40 1440 82 V340 H0 Z"/>
+      <path class="h2" d="M0 190 C 220 130 420 196 640 178 S 1010 120 1200 168 S 1380 196 1440 180 V340 H0 Z"/>
+      <path class="h3" d="M0 262 C 260 216 470 286 740 258 S 1180 222 1440 268 V340 H0 Z"/>
+    </svg>
+
+    <nav class="topbar" aria-label="Navigation">
+      <a class="brand" href="#dawn" aria-label="Aube, haut de page">
+        <svg viewBox="0 0 64 64" class="mark" aria-hidden="true"><path d="M14 42a18 18 0 0 1 36 0"/><path d="M8 42h48"/><path d="M32 12v6"/><path d="M14 20l4 4"/><path d="M50 20l-4 4"/></svg>
+        Aube
+      </a>
+      <a class="quiet" href="privacy/">Confidentialité</a>
+    </nav>
+
+    <div class="scene">
+      <div class="title">
+        <svg viewBox="0 0 64 52" class="mark big-mark" aria-hidden="true">
+          <path pathLength="1" d="M14 42a18 18 0 0 1 36 0"/><path pathLength="1" d="M8 42h48"/><path pathLength="1" d="M32 12v6"/><path pathLength="1" d="M14 20l4 4"/><path pathLength="1" d="M50 20l-4 4"/>
+        </svg>
+        <h1>Aube</h1>
+        <p>Un verset, chaque matin.</p>
+      </div>
+
+      <figure class="verse" id="verse">
+        <blockquote>Dieu dit : Que la lumière soit ! Et la lumière fut.</blockquote>
+        <figcaption>Genèse 1:3</figcaption>
+      </figure>
+    </div>
+
+    <p class="hint">Faites défiler, le jour se lève</p>
+  </div>
+</header>
+
+<main class="day">
+
+  <section class="morning">
+    <div class="wrap">
+      <div class="reveal">
+        <p class="clock" aria-hidden="true">6 h 00</p>
+        <h2>Avant le reste de la journée, un verset vous attend.</h2>
+        <p class="lede">Aube vous envoie un seul verset par jour, tôt le matin. Vous l’ouvrez, vous le lisez, et la journée commence.</p>
+      </div>
+      <div class="phone" data-drift="0.07">
+        <img src="assets/ecran-2-verset.jpg" width="720" height="1565" alt="L’écran d’Aube : la date du jour, le verset en grands caractères, puis les boutons Partager, Garder et Mes favoris." loading="lazy">
+      </div>
+    </div>
+  </section>
+
+  <section class="year">
+    <div class="wrap">
+      <h2 class="reveal">Un an de matins.</h2>
+      <p class="lede reveal">365 versets, un par jour. Rien à choisir, rien à rattraper : seulement celui d’aujourd’hui.</p>
+
+      <div class="rotor" id="rotor" aria-live="off">
+        <figure class="on"><blockquote>Venez à moi, vous tous qui êtes fatigués et chargés, et je vous donnerai du repos.</blockquote><figcaption>Matthieu 11:28</figcaption></figure>
+        <figure><blockquote>Je puis tout par celui qui me fortifie.</blockquote><figcaption>Philippiens 4:13</figcaption></figure>
+        <figure><blockquote>Au commencement, Dieu créa les cieux et la terre.</blockquote><figcaption>Genèse 1:1</figcaption></figure>
+        <figure><blockquote>Celui qui n’aime pas n’a pas connu Dieu, car Dieu est amour.</blockquote><figcaption>1 Jean 4:8</figcaption></figure>
+      </div>
+
+      <ul class="dots" id="dots" aria-hidden="true"></ul>
+      <p class="dots-note" id="dots-note"></p>
+    </div>
+  </section>
+
+  <section class="keep">
+    <div class="wrap">
+      <div class="reveal">
+        <h2>Gardez ceux qui vous parlent. Offrez-les à quelqu’un.</h2>
+        <p class="lede">Un geste pour ranger un verset dans vos favoris. Un autre pour l’envoyer, sous la forme d’une image prête à partager.</p>
+      </div>
+      <div class="cards" aria-hidden="true">
+        <div class="share-card" data-drift="0.1">
+          <svg viewBox="0 0 64 52" class="mark"><path d="M14 42a18 18 0 0 1 36 0"/><path d="M8 42h48"/><path d="M32 12v6"/><path d="M14 20l4 4"/><path d="M50 20l-4 4"/></svg>
+          <blockquote>Dieu dit : Que la lumière soit ! Et la lumière fut.</blockquote>
+          <p class="ref">Genèse 1:3</p>
+          <p class="name">Aube</p>
+        </div>
+        <div class="fav-list" data-drift="-0.06">
+          <h3>Mes favoris</h3>
+          <div><q>Je puis tout par celui qui me fortifie.</q><span>Philippiens 4:13</span></div>
+          <div><q>Jésus pleura.</q><span>Jean 11:35</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="plain">
+    <div class="wrap">
+      <h2 class="reveal">Rien d’autre que le verset.</h2>
+      <dl class="reveal">
+        <div><dt>Pas de compte</dt><dd>Vous ouvrez l’app, elle fonctionne. Aucune inscription, aucun mot de passe.</dd></div>
+        <div><dt>Aucune donnée collectée</dt><dd>Aube ne se connecte jamais à Internet. Vos favoris restent sur votre iPhone.</dd></div>
+        <div><dt>Gratuite</dt><dd>Sans publicité et sans achat intégré.</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="tomorrow">
+    <div class="wrap">
+      <div class="halo" id="halo" aria-hidden="true">
+        <svg viewBox="0 0 64 52" class="mark"><path pathLength="1" d="M14 42a18 18 0 0 1 36 0"/><path pathLength="1" d="M8 42h48"/><path pathLength="1" d="M32 12v6"/><path pathLength="1" d="M14 20l4 4"/><path pathLength="1" d="M50 20l-4 4"/></svg>
+      </div>
+      <h2 class="reveal">À demain matin.</h2>
+      <p class="lede reveal">Aube arrive sur iPhone.</p>
+      <p class="reveal"><span class="soon">Bientôt sur l’App Store</span></p>
+      <footer>
+        <span>Aube</span>
+        <a href="privacy/">Confidentialité</a>
+      </footer>
+    </div>
+  </section>
+
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var dawn = document.getElementById('dawn');
+  var stage = document.getElementById('stage');
+  var verse = document.getElementById('verse');
+
+  // Étoiles
+  var stars = document.getElementById('stars');
+  for (var s = 0; s < 90; s++) {
+    var star = document.createElement('i');
+    var size = Math.random() < 0.15 ? 3 : 2;
+    star.style.cssText = 'left:' + (Math.random() * 100) + '%;top:' + (Math.pow(Math.random(), 1.4) * 100) + '%;width:' + size + 'px;height:' + size + 'px;animation-delay:-' + (Math.random() * 5) + 's;animation-duration:' + (3.5 + Math.random() * 4) + 's';
+    stars.appendChild(star);
+  }
+
+  // Le verset, mot à mot
+  var quote = verse.querySelector('blockquote');
+  var words = quote.textContent.replace(/ ([:!?])/g, ' $1').split(' ');
+  quote.setAttribute('aria-label', quote.textContent);
+  quote.textContent = '';
+  var spans = words.map(function (word, i) {
+    var span = document.createElement('span');
+    span.className = 'w';
+    span.setAttribute('aria-hidden', 'true');
+    span.textContent = word;
+    quote.appendChild(span);
+    if (i < words.length - 1) quote.appendChild(document.createTextNode(' '));
+    return span;
+  });
+
+  function clamp(x) { return x < 0 ? 0 : x > 1 ? 1 : x; }
+  function ramp(a, b, x) { var t = clamp((x - a) / (b - a)); return t * t * (3 - 2 * t); }
+  function mix(a, b, t) {
+    return 'rgb(' + a.map(function (v, i) { return Math.round(v + (b[i] - v) * t); }).join(',') + ')';
+  }
+  var PAPER = [251, 246, 238], INK = [43, 36, 32], INK_SOFT = [110, 90, 80], PALE = [222, 205, 208];
+  var HILLS = [
+    [[52, 40, 74], [240, 205, 185]],
+    [[36, 30, 58], [246, 226, 212]],
+    [[22, 19, 40], [251, 246, 238]]
+  ];
+
+  function paint(p) {
+    var st = stage.style;
+    st.setProperty('--o-night', (1 - ramp(0.08, 0.5, p)).toFixed(3));
+    st.setProperty('--o-rose', (ramp(0.05, 0.4, p) * (1 - ramp(0.58, 0.92, p))).toFixed(3));
+    // Le soleil part caché sous l'horizon et s'arrête à moitié levé, comme le symbole.
+    st.setProperty('--sun-y', (26 - ramp(0.1, 0.95, p) * 29).toFixed(2));
+    var day = ramp(0.66, 0.76, p);
+    st.setProperty('--fg', mix(PAPER, INK, day));
+    st.setProperty('--fg-soft', mix(PALE, INK_SOFT, day));
+    var light = ramp(0.35, 0.95, p);
+    HILLS.forEach(function (h, i) { st.setProperty('--hill-' + (i + 1), mix(h[0], h[1], light)); });
+    st.setProperty('--o-title', (1 - ramp(0.04, 0.14, p)).toFixed(3));
+    st.setProperty('--o-hint', (1 - ramp(0.01, 0.06, p)).toFixed(3));
+    st.setProperty('--o-ref', ramp(0.56, 0.66, p).toFixed(3));
+    var head = (p - 0.16) / 0.38 * (spans.length + 1);
+    spans.forEach(function (span, i) {
+      var t = ramp(0, 1, (head - i) / 2);
+      span.style.opacity = t.toFixed(3);
+      span.style.transform = 'translate3d(0,' + ((1 - t) * 14).toFixed(1) + 'px,0)';
+      span.style.filter = t < 1 ? 'blur(' + ((1 - t) * 6).toFixed(1) + 'px)' : 'none';
+    });
+    document.querySelector('meta[name=theme-color]').content = p > 0.6 ? '#F3D9C8' : '#14132B';
+  }
+
+  // Dérive douce des objets pendant le défilement
+  var drifters = [].slice.call(document.querySelectorAll('[data-drift]'));
+  var rest = { 'share-card': ' rotate(3deg)', 'fav-list': ' rotate(-4deg)' };
+  function drift() {
+    var mid = window.innerHeight / 2;
+    drifters.forEach(function (el) {
+      var r = el.getBoundingClientRect();
+      if (r.bottom < -200 || r.top > window.innerHeight + 200) return;
+      var d = (r.top + r.height / 2 - mid) * parseFloat(el.dataset.drift);
+      el.style.transform = 'translate3d(0,' + d.toFixed(1) + 'px,0)' + (rest[el.className] || '');
+    });
+  }
+
+  var ticking = false;
+  function frame() {
+    ticking = false;
+    var span = dawn.offsetHeight - window.innerHeight;
+    paint(span > 0 ? clamp(window.scrollY / span) : 1);
+    drift();
+  }
+  function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(frame); } }
+
+  if (reduced) {
+    paint(1);
+  } else {
+    frame();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+  }
+
+  // Les 365 matins
+  var dots = document.getElementById('dots');
+  var now = new Date();
+  var today = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 864e5);
+  if (today > 365) today = 365;
+  for (var d = 1; d <= 365; d++) {
+    var li = document.createElement('li');
+    li.style.setProperty('--i', d);
+    if (d < today) li.className = 'past';
+    if (d === today) li.className = 'today';
+    dots.appendChild(li);
+  }
+  document.getElementById('dots-note').innerHTML = 'Aujourd’hui, <b>' +
+    now.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' }) + '</b>.';
+
+  // Apparitions à l'entrée dans l'écran
+  var watched = [].slice.call(document.querySelectorAll('.reveal, #dots, #halo'));
+  if ('IntersectionObserver' in window && !reduced) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.2, rootMargin: '0px 0px -8% 0px' });
+    watched.forEach(function (el) { io.observe(el); });
+  } else {
+    watched.forEach(function (el) { el.classList.add('in'); });
+  }
+
+  // Les versets qui se relaient
+  if (!reduced) {
+    var figs = [].slice.call(document.querySelectorAll('#rotor figure'));
+    var current = 0;
+    setInterval(function () {
+      if (document.hidden) return;
+      figs[current].classList.remove('on');
+      current = (current + 1) % figs.length;
+      figs[current].classList.add('on');
+    }, 6500);
+  }
+})();
+</script>
+</body>
+</html>
