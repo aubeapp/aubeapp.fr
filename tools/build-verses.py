@@ -61,7 +61,7 @@ def head(title, desc, path, extra=""):
 <link rel="stylesheet" href="/assets/verset.css">
 {extra}</head>
 <body>
-<nav class="top"><a class="brand" href="/">{MARK}Aube</a><a href="/verset-du-jour/">Verset du jour</a></nav>
+<nav class="top"><a class="brand" href="/">{MARK}Aube</a><span class="top-links"><a href="/versets-bibliques/">Par thème</a><a href="/verset-du-jour/">Verset du jour</a></span></nav>
 """
 
 
@@ -76,7 +76,7 @@ def cta():
 
 
 def footer():
-    return """<footer><a href="/">Aube</a><a href="/verset-du-jour/">Tous les versets du jour</a><a href="/privacy/">Confidentialité</a><a href="mailto:contact@aubeapp.fr">contact@aubeapp.fr</a></footer>
+    return """<footer><a href="/">Aube</a><a href="/verset-du-jour/">Tous les versets du jour</a><a href="/versets-bibliques/">Versets par thème</a><a href="/privacy/">Confidentialité</a><a href="mailto:contact@aubeapp.fr">contact@aubeapp.fr</a></footer>
 """
 
 
@@ -150,6 +150,7 @@ write(today_path, head(
 </figure>
 <p class="note">Le même verset que dans l’app Aube aujourd’hui. Traduction Louis Segond 1910.</p>
 {cta()}
+<p class="themes-link"><a href="/versets-bibliques/">Versets bibliques par thème : amour, paix, force, espérance… →</a></p>
 <section class="all">
   <h2>Un verset pour chaque jour de l’année</h2>
   {''.join(month_blocks)}
@@ -172,9 +173,56 @@ write(today_path, head(
 </html>
 """)
 
+
+# Pages par thème (listes relues à la main dans tools/themes.json)
+THEMES = json.load(open(os.path.join(ROOT, "tools", "themes.json"), encoding="utf-8"))
+for t in THEMES:
+    path = f"/versets-bibliques/{t['slug']}/"
+    items = "".join(
+        f'<figure class="tv"><blockquote>{E(verses[i]["text"])}</blockquote><figcaption>{E(verses[i]["reference"])}'
+        f' · <a href="/verset-du-jour/{days[i]["slug"]}/">verset du {E(days[i]["label"])}</a></figcaption></figure>'
+        for i in t["verses"])
+    others = "".join(f'<a href="/versets-bibliques/{o["slug"]}/">{E(o["short"])}</a>' for o in THEMES if o is not t)
+    n = len(t["verses"])
+    desc = f"{n} versets bibliques sur {t['short']}, dans la traduction Louis Segond. {t['intro']} Recevez un verset chaque matin avec Aube."
+    ld = jsonld({"@context": "https://schema.org", "@type": "CollectionPage", "name": t["title"], "url": SITE + path, "inLanguage": "fr",
+                 "hasPart": [{"@type": "Quotation", "text": verses[i]["text"], "citation": verses[i]["reference"] + " (Louis Segond 1910)"} for i in t["verses"]]})
+    write(path, head(f"{t['title']} : {n} versets (Louis Segond) | Aube", desc, path, ld) + f"""<main>
+<header class="day-head">
+  <p class="kicker">Thème</p>
+  <h1 class="theme-h1">{E(t['title'])}</h1>
+  <p class="intro">{E(t['intro'])}</p>
+</header>
+<section class="theme-list">{items}</section>
+<p class="note">{n} versets, tirés des 365 versets du jour d’Aube. Traduction Louis Segond 1910.</p>
+{cta()}
+<nav class="other-themes" aria-label="Autres thèmes"><h2>Autres thèmes</h2><div>{others}</div></nav>
+</main>
+{footer()}</body>
+</html>
+""")
+
+hub = "/versets-bibliques/"
+cards = "".join(
+    f'<a class="theme-card" href="/versets-bibliques/{t["slug"]}/"><span>{E(t["short"])}</span>'
+    f'<q>{E(verses[t["verses"][0]]["text"])}</q><em>{len(t["verses"])} versets</em></a>' for t in THEMES)
+write(hub, head("Versets bibliques par thème : amour, paix, force, espérance | Aube",
+    "Des versets bibliques classés par thème : amour, paix, force et courage, espérance, foi, pardon, joie, confiance, réconfort, prière. Traduction Louis Segond.",
+    hub, jsonld({"@context": "https://schema.org", "@type": "CollectionPage", "name": "Versets bibliques par thème", "url": SITE + hub, "inLanguage": "fr"})) + f"""<main>
+<header class="day-head">
+  <p class="kicker">Versets bibliques</p>
+  <h1>Par thème</h1>
+  <p class="intro">Un verset pour chaque moment : choisissez ce dont vous avez besoin aujourd’hui.</p>
+</header>
+<section class="theme-grid">{cards}</section>
+{cta()}</main>
+{footer()}</body>
+</html>
+""")
+
 # Plan du site
 today = datetime.date.today().isoformat()
-urls = ["/", "/verset-du-jour/", "/privacy/"] + [f"/verset-du-jour/{d['slug']}/" for d in days]
+urls = ["/", "/verset-du-jour/", "/versets-bibliques/", "/privacy/"] + [f"/versets-bibliques/{t['slug']}/" for t in THEMES] + [f"/verset-du-jour/{d['slug']}/" for d in days]
 open(os.path.join(ROOT, "sitemap.xml"), "w", encoding="utf-8").write(
     '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
     + "".join(f"  <url><loc>{SITE}{u}</loc><lastmod>{today}</lastmod></url>\n" for u in urls)

@@ -1,0 +1,207 @@
+[
+ {
+  "slug": "amour",
+  "title": "Versets bibliques sur l’amour",
+  "short": "l’amour",
+  "intro": "L’amour de Dieu pour nous, et l’amour les uns pour les autres.",
+  "verses": [
+   0,
+   3,
+   55,
+   71,
+   77,
+   78,
+   114,
+   118,
+   120,
+   178,
+   182,
+   193,
+   214,
+   223,
+   232,
+   281,
+   283,
+   289,
+   307,
+   314,
+   319,
+   324,
+   330,
+   338
+  ]
+ },
+ {
+  "slug": "paix",
+  "title": "Versets bibliques sur la paix",
+  "short": "la paix",
+  "intro": "Pour retrouver la paix du cœur, avec Dieu et avec les autres.",
+  "verses": [
+   48,
+   112,
+   171,
+   190,
+   259,
+   285,
+   303,
+   317
+  ]
+ },
+ {
+  "slug": "force-et-courage",
+  "title": "Versets bibliques sur la force et le courage",
+  "short": "la force et le courage",
+  "intro": "Quand la journée s’annonce lourde : des versets pour se relever.",
+  "verses": [
+   1,
+   54,
+   105,
+   141,
+   145,
+   209,
+   287,
+   353
+  ]
+ },
+ {
+  "slug": "esperance",
+  "title": "Versets bibliques sur l’espérance",
+  "short": "l’espérance",
+  "intro": "Des versets pour garder l’espérance, même dans l’attente.",
+  "verses": [
+   136,
+   160,
+   203,
+   220,
+   315,
+   317,
+   357
+  ]
+ },
+ {
+  "slug": "foi",
+  "title": "Versets bibliques sur la foi",
+  "short": "la foi",
+  "intro": "Croire, et vivre par la foi : ce qu’en dit la Bible.",
+  "verses": [
+   0,
+   28,
+   74,
+   80,
+   84,
+   86,
+   90,
+   92,
+   110,
+   112,
+   132,
+   136,
+   172,
+   178,
+   250,
+   252,
+   278,
+   286,
+   334
+  ]
+ },
+ {
+  "slug": "pardon",
+  "title": "Versets bibliques sur le pardon",
+  "short": "le pardon",
+  "intro": "Le pardon reçu de Dieu, et le pardon donné aux autres.",
+  "verses": [
+   18,
+   60,
+   106,
+   110,
+   176,
+   276,
+   349
+  ]
+ },
+ {
+  "slug": "joie",
+  "title": "Versets bibliques sur la joie",
+  "short": "la joie",
+  "intro": "Des versets pleins de joie et d’allégresse pour commencer la journée.",
+  "verses": [
+   58,
+   96,
+   135,
+   137,
+   175,
+   187,
+   199,
+   300,
+   301,
+   314,
+   353,
+   363
+  ]
+ },
+ {
+  "slug": "confiance-en-dieu",
+  "title": "Versets bibliques sur la confiance en Dieu",
+  "short": "la confiance en Dieu",
+  "intro": "Se confier en l’Éternel, de tout son cœur.",
+  "verses": [
+   105,
+   211,
+   233,
+   285,
+   299,
+   315,
+   359
+  ]
+ },
+ {
+  "slug": "reconfort",
+  "title": "Versets bibliques de réconfort",
+  "short": "le réconfort",
+  "intro": "Pour les jours de fatigue, de peine ou de détresse.",
+  "verses": [
+   2,
+   14,
+   152,
+   240,
+   287,
+   297,
+   311,
+   359
+  ]
+ },
+ {
+  "slug": "priere",
+  "title": "Versets bibliques sur la prière",
+  "short": "la prière",
+  "intro": "Ce que la Bible dit de la prière et de l’invocation.",
+  "verses": [
+   116,
+   158,
+   191,
+   216,
+   290,
+   293,
+   310,
+   321,
+   327,
+   357
+  ]
+ },
+ {
+  "slug": "lumiere",
+  "title": "Versets bibliques sur la lumière",
+  "short": "la lumière",
+  "intro": "Dieu est lumière : des versets pour éclairer la journée.",
+  "verses": [
+   7,
+   24,
+   72,
+   82,
+   113,
+   288,
+   347
+  ]
+ }
+]
