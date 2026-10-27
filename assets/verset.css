@@ -1,0 +1,44 @@
+@font-face { font-family: "Cormorant Garamond"; src: url("/assets/fonts/CormorantGaramond.ttf") format("truetype"); font-weight: 300 700; font-display: swap; }
+@font-face { font-family: "Karla"; src: url("/assets/fonts/Karla.ttf") format("truetype"); font-weight: 200 800; font-display: swap; }
+:root {
+  --paper: #FBF6EE; --peach: #F3D9C8; --earth: #9A4A30; --ink: #2B2420; --ink-soft: #6E5A50; --line: #D9C6B4; --night: #14132B;
+  --serif: "Cormorant Garamond", "Iowan Old Style", Georgia, serif;
+  --sans: "Karla", ui-rounded, system-ui, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: linear-gradient(var(--peach), var(--paper) 520px) no-repeat, var(--paper); color: var(--ink); font-family: var(--sans); font-size: 1.125rem; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--earth); outline-offset: 4px; border-radius: 4px; }
+.mark { width: 26px; height: 22px; fill: none; stroke: var(--earth); stroke-width: 3.2; stroke-linecap: round; }
+nav.top { display: flex; justify-content: space-between; align-items: center; max-width: 960px; margin: 0 auto; padding: 20px 16px; font-size: .95rem; }
+nav.top a { text-decoration: none; }
+.brand { display: flex; gap: 10px; align-items: center; font-family: var(--serif); font-size: 1.6rem; font-weight: 600; }
+main { max-width: 960px; margin: 0 auto; padding: 0 16px 48px; }
+.day-head { text-align: center; padding: 6vh 0 2vh; }
+.kicker, .cta-kicker { text-transform: uppercase; letter-spacing: .22em; font-size: .78rem; font-weight: 700; color: var(--earth); margin: 0 0 8px; }
+h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(2.6rem, 8vw, 4.6rem); line-height: 1; margin: 0; }
+h1::first-letter { text-transform: uppercase; }
+.verse { margin: 5vh auto 3vh; max-width: 780px; text-align: center; }
+.verse blockquote { margin: 0; font-family: var(--serif); font-weight: 500; font-size: clamp(2rem, 5.4vw, 3.4rem); line-height: 1.18; text-wrap: balance; }
+.verse blockquote::before { content: "« "; color: var(--earth); }
+.verse blockquote::after { content: " »"; color: var(--earth); }
+.verse figcaption { margin-top: 26px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; font-size: .9rem; color: var(--earth); }
+.note { text-align: center; color: var(--ink-soft); font-size: .95rem; margin: 0 0 4vh; }
+.pager { display: flex; justify-content: space-between; gap: 12px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 16px 0; margin: 0 0 7vh; }
+.pager a { text-decoration: none; font-weight: 600; }
+.cta { background: var(--night); color: var(--paper); border-radius: 28px; padding: clamp(32px, 6vw, 64px); text-align: center; margin: 6vh 0; }
+.cta .cta-kicker { color: #E9B7A1; }
+.cta h2 { font-family: var(--serif); font-weight: 600; font-size: clamp(1.9rem, 5vw, 3rem); line-height: 1.08; margin: 0 0 14px; }
+.cta p { margin: 0 auto 26px; max-width: 520px; opacity: .85; }
+.store { display: inline-flex; align-items: center; gap: 12px; background: var(--paper); color: var(--night); text-decoration: none; font-weight: 700; padding: 16px 26px; border-radius: 999px; transition: transform .25s; white-space: nowrap; }
+@media (max-width: 420px) { .store { padding: 14px 20px; font-size: 1rem; gap: 10px; } }
+.store:hover { transform: translateY(-2px); }
+.store svg { width: 20px; height: 24px; fill: currentColor; }
+.all h2 { font-family: var(--serif); font-size: clamp(1.8rem, 4vw, 2.6rem); text-align: center; margin: 8vh 0 4vh; }
+.month h3 { font-family: var(--serif); font-size: 1.6rem; margin: 32px 0 8px; color: var(--earth); }
+.month ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 2px 20px; }
+.month a { display: flex; justify-content: space-between; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--line); text-decoration: none; font-size: .95rem; }
+.month a span { font-weight: 700; }
+.month a:hover { color: var(--earth); }
+footer { display: flex; flex-wrap: wrap; gap: 10px 24px; justify-content: center; padding: 24px 0 8px; font-size: .9rem; color: var(--ink-soft); }
