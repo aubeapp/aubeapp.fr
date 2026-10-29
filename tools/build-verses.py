@@ -76,7 +76,7 @@ def cta():
 
 
 def footer():
-    return """<footer><a href="/">Aube</a><a href="/verset-du-jour/">Tous les versets du jour</a><a href="/versets-bibliques/">Versets par thème</a><a href="/privacy/">Confidentialité</a><a href="mailto:contact@aubeapp.fr">contact@aubeapp.fr</a></footer>
+    return """<footer><a href="/">Aube</a><a href="/verset-du-jour/">Tous les versets du jour</a><a href="/versets-bibliques/">Versets par thème</a><a href="/privacy/">Confidentialité</a><a href="mailto:contact@aubeapp.fr">contact@aubeapp.fr</a><a href="https://www.tiktok.com/@aube.app" rel="me noopener" target="_blank">TikTok</a><a href="https://www.instagram.com/aube.app/" rel="me noopener" target="_blank">Instagram</a></footer>
 """
 
 
